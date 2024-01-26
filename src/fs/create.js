@@ -1,19 +1,14 @@
 import { writeFile } from 'fs/promises';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { generatePathToFiles } from './helpers/path.js';
+import { tryAction } from './helpers/common.js';
 
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const newFilePath = join(__dirname, 'files', 'fresh.txt');
+const newFilePath = generatePathToFiles('fresh.txt');
 
 const create = async () => {
-    try {
+    async function actionCreate() {
         await writeFile(newFilePath, 'I am fresh and young', { flag: 'wx' });
-    } catch (error) {
-        throw Error('FS operation failed');
     }
+    await tryAction(actionCreate);
 };
 
 await create();

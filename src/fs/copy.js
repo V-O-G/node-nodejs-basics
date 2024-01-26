@@ -1,24 +1,20 @@
 import { access, cp } from 'fs/promises';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { generatePath, generatePathToFiles } from './helpers/path.js';
+import { tryAction } from './helpers/common.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const sourcePath = join(__dirname, 'files');
-const destinationPath = join(__dirname, 'files_copy');
+const sourcePath = generatePathToFiles();
+const destinationPath = generatePath('files_copy');
 
 const copy = async () => {
-    try {
+    async function actionCopy() {
         await access(sourcePath);
         await cp(sourcePath, destinationPath, {
             errorOnExist: true,
             force: false,
             recursive: true,
         });
-    } catch (error) {
-        throw Error('FS operation failed');
     }
+    await tryAction(actionCopy);
 };
 
 await copy();

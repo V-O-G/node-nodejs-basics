@@ -1,18 +1,14 @@
 import { readdir } from 'fs/promises';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { generatePathToFiles } from './helpers/path.js';
+import { tryAction } from './helpers/common.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const folderPath = join(__dirname, 'files');
+const folderPath = generatePathToFiles();
 
 const list = async () => {
-    try {
+    async function actionList() {
         console.log(await readdir(folderPath));
-    } catch (error) {
-        throw Error('FS operation failed');
-    }  
+    }
+    await tryAction(actionList); 
 };
 
 await list();
